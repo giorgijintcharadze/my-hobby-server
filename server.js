@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import Hobby from "./models/hobby.js";
+import { hobbyRouter } from "./routes/hobbyRoutes.js";
 
 dotenv.config();
 
@@ -22,23 +22,7 @@ mongoose
     console.log(err);
   });
 
-app.get("/", (req, res) => {
-  res.json({ status: "ok", Message: "server is running" });
-});
-
-app.post("/my-hobby", async (req, res) => {
-  try {
-    const { hobby } = req.body;
-    if (!hobby) {
-      return res.status(400).json({ message: "hobby is required" });
-    }
-    const newHobby = await Hobby.create({ hobby });
-    res.status(201).json({ message: "hobby added successfully" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "serer error" });
-  }
-});
+app.use("/api/hobbies", hobbyRouter);
 
 app.listen(PORT, () => {
   console.log(`server is running  on http://localhost:${PORT}`);
